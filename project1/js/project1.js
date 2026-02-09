@@ -28,7 +28,7 @@ const tax_calcs = event => {
         //populate the taxes table
         table.appendChild(table_rows);
 
-        
+        let asdf = 123;
     }
 
     //this is a slightly more secure way of doing it, in the event we ever end up adding new buttons to the site
