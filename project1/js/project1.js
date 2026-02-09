@@ -74,8 +74,15 @@ const destroy_table_rows = () => {
     }
 }
 
-//TODO: make the variables used here global
+
 const tax_calcs_2020 = (money) => {
+    grossPay = 1;
+    fedTax = 2;
+    stateTax = 3;
+    medTax = 4;
+    SSNTax = 5;
+    totalTax = 6;
+    netPay = 7;
     return [grossPay, fedTax, stateTax, medTax, SSNTax, totalTax, netPay];
 }
 
