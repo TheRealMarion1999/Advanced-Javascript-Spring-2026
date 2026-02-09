@@ -30,7 +30,7 @@ const tax_calcs = event => {
     if (userInputValue !== "") {
 
         if (get_table_size(table) > 1) {
-            destroy_table_rows();
+            destroy_table_rows(table);
         }
         //check if TRs exist (or just... anything in table, really.)
         //if they do, get rid of the current TRs and replace them with a new batch
@@ -63,8 +63,7 @@ const create_table_row = (table, leftCellContent = "term", rightCellContent = "v
 }
 
 //destroys all rows in the current array
-const destroy_table_rows = () => {
-    let table = document.getElementById("taxes-table");
+const destroy_table_rows = (table) => {
 
     let child = table.lastElementChild;
     while (child) {
