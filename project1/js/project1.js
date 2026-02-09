@@ -29,7 +29,6 @@ const tax_calcs = event => {
     let userInputValue = userInput.value;
     if (userInputValue !== "") {
 
-        console.log(get_table_size(table));
         if (get_table_size(table) > 1) {
             destroy_table_rows();
         }
@@ -87,6 +86,13 @@ const tax_calcs_2020 = (money) => {
 }
 
 const tax_calcs_2024 = (money) => {
+    grossPay = 8;
+    fedTax = 9;
+    stateTax = 10;
+    medTax = 11;
+    SSNTax = 12;
+    totalTax = 13;
+    netPay = 14;
     return [grossPay, fedTax, stateTax, medTax, SSNTax, totalTax, netPay];
 }
 
