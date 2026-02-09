@@ -10,3 +10,17 @@
     border-color: rgb(106, 165, 255);
     padding: 10px;
 }
+
+table {
+    margin: auto;
+    margin-top: 2em;
+    width: 50%;
+}
+
+td {
+    text-align: center;
+    margin: auto;
+    padding: 0px 20px 0px 20px;
+    border-style: solid;
+    border-color: black;
+}
