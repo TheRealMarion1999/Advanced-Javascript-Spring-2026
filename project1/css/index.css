@@ -1,0 +1,12 @@
+.container {
+    text-align: center;
+}
+
+#top-thing {
+    margin: auto;
+    background-color: rgb(106, 165, 255);
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    border-color: rgb(106, 165, 255);
+    padding: 10px;
+}
