@@ -11,6 +11,11 @@ let medTax = 0;
 let SSNTax = 0;
 let totalTax = 0;
 let netPay = 0;
+//kind of bad practice to make these an array, but I couldn't think of good, clear names for each bracket
+const FED_TAX_BRACKETS_2020 = [9876, 40126, 85526, 163301, 207351, 518401];
+const FED_TAX_BRACKETS_2024 = [11601, 47151, 100526, 191951, 243726, 609351];
+const WI_TAX_BRACKETS_2020 = [];
+const WI_TAX_BRACKETS_2024 = [];
 const init = () => {
     table = document.getElementById("taxes-table");
 
@@ -72,9 +77,23 @@ const destroy_table_rows = (table) => {
     }
 }
 
-
+//TODO: replace magic numbers
 const tax_calcs_2020 = (money) => {
-    grossPay = 1;
+    let federalTax;
+    grossPay = money;
+    if (grossPay > FED_TAX_BRACKETS_2020[5]) {
+        federalTax 
+    } else if (grossPay > FED_TAX_BRACKETS_2020[4]) {
+        federalTax = 63738 + (grossPay * .32);
+    } else if (grossPay > FED_TAX_BRACKETS_2020[3]) {
+        federalTax = 24618 + (grossPay * .24);
+    } else if (grossPay > FED_TAX_BRACKETS_2020[2]) {
+        federalTax = 5802.5 + (grossPay * .22);
+    } else if (grossPay > FED_TAX_BRACKETS_2020[1]) {
+        federalTax = 987.5 + (grossPay * .12);
+    } else {
+
+    }
     fedTax = 2;
     stateTax = 3;
     medTax = 4;
@@ -85,7 +104,7 @@ const tax_calcs_2020 = (money) => {
 }
 
 const tax_calcs_2024 = (money) => {
-    grossPay = 8;
+    grossPay = money;
     fedTax = 9;
     stateTax = 10;
     medTax = 11;
