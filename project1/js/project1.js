@@ -14,8 +14,12 @@ let netPay = 0;
 //kind of bad practice to make these an array, but I couldn't think of good, clear names for each bracket
 const FED_TAX_BRACKETS_2020 = [9876, 40126, 85526, 163301, 207351, 518401];
 const FED_TAX_BRACKETS_2024 = [11601, 47151, 100526, 191951, 243726, 609351];
-const WI_TAX_BRACKETS_2020 = [];
-const WI_TAX_BRACKETS_2024 = [];
+const WI_TAX_BRACKETS_2020 = [11971, 23931, 263481];
+const WI_TAX_BRACKETS_2024 = [12761, 25521, 280951];
+const SOCIAL_SECURITY_TAX_LIMIT_2020 = 137000;
+const MEDICARE_TAX_LIMIT_2020 = 200000;
+const SOCIAL_SECURITY_TAX_LIMIT_2024 = 168000;
+const MEDICARE_TAX_LIMIT_2024 = 200000;
 const init = () => {
     table = document.getElementById("taxes-table");
 
@@ -78,40 +82,137 @@ const destroy_table_rows = (table) => {
 }
 
 //TODO: replace magic numbers
-const tax_calcs_2020 = (money) => {
-    let federalTax;
-    grossPay = money;
-    if (grossPay > FED_TAX_BRACKETS_2020[5]) {
-        federalTax 
-    } else if (grossPay > FED_TAX_BRACKETS_2020[4]) {
-        federalTax = 63738 + (grossPay * .32);
-    } else if (grossPay > FED_TAX_BRACKETS_2020[3]) {
-        federalTax = 24618 + (grossPay * .24);
-    } else if (grossPay > FED_TAX_BRACKETS_2020[2]) {
-        federalTax = 5802.5 + (grossPay * .22);
-    } else if (grossPay > FED_TAX_BRACKETS_2020[1]) {
-        federalTax = 987.5 + (grossPay * .12);
-    } else {
+//TODO: move all of these to individual functions
 
+//TODO: Frankly this whole roundabout way of doing it is stupid. There has to be a better way.
+const tax_calcs_2020 = (money) => {
+    grossPay = Number(money);
+    if (grossPay > FED_TAX_BRACKETS_2020[5]) {
+        remainder = grossPay - 245178;
+        fedTax = 245178 + (remainder * .37);
+    } else if (grossPay > FED_TAX_BRACKETS_2020[4]) {
+        remainder = grossPay - 130090;
+        fedTax = 130090 + (remainder * .35);
+    } else if (grossPay > FED_TAX_BRACKETS_2020[3]) {
+        remainder = grossPay - 63810;
+        fedTax = 63810 + (remainder * .32);
+    } else if (grossPay > FED_TAX_BRACKETS_2020[2]) {
+        remainder = grossPay - 24618;
+        fedTax = 24618 + (remainder * .24);
+    } else if (grossPay > FED_TAX_BRACKETS_2020[1]) {
+        remainder = grossPay - 5802.5
+        fedTax = 5802.5 + (remainder * .22);
+    } else if (grossPay > FED_TAX_BRACKETS_2020[0]) {
+        remainder = grossPay - 987.5;
+        fedTax = 987.5 + (remainder * .12);
+    } else {
+        fedTax = grossPay * .1;
     }
-    fedTax = 2;
-    stateTax = 3;
-    medTax = 4;
-    SSNTax = 5;
-    totalTax = 6;
-    netPay = 7;
+    if (grossPay > WI_TAX_BRACKETS_2020[2]) {
+        stateTax = 1;
+    } else if (grossPay > WI_TAX_BRACKETS_2020[1]) {
+        stateTax = 2;
+    } else if (grossPay > WI_TAX_BRACKETS_2020[0]) {
+        stateTax = 3;
+    } else {
+        stateTax = 4;
+    }
+    if (grossPay > SOCIAL_SECURITY_TAX_LIMIT_2020) {
+        SSNTax = 84940;
+    } else {
+        SSNTax = grossPay * .062;
+    }
+    if (grossPay > MEDICARE_TAX_LIMIT_2020) {
+        remainder = grossPay - 29000
+        medTax = 29000 + (remainder * .0235);
+    } else {
+        medTax = grossPay * .0145;
+    }
+
+    totalTax = fedTax + stateTax + SSNTax + medTax;
+    netPay = grossPay - totalTax;
     return [grossPay, fedTax, stateTax, medTax, SSNTax, totalTax, netPay];
 }
 
 const tax_calcs_2024 = (money) => {
+    money = Number(money)
     grossPay = money;
-    fedTax = 9;
-    stateTax = 10;
-    medTax = 11;
-    SSNTax = 12;
-    totalTax = 13;
-    netPay = 14;
+    
+    fedTax = federal_tax_2024(money);
+    stateTax = state_tax_2024(money);
+    //Medicare
+    if (grossPay > MEDICARE_TAX_LIMIT_2024) {
+        remainder = grossPay - 29000;
+        medTax = 29000 + (remainder * .0235);
+    } else {
+        medTax = grossPay * .0145;
+    }
+
+    //Social Security
+    if (grossPay > SOCIAL_SECURITY_TAX_LIMIT_2024) {
+        SSNTax = 10453.2
+    } else {
+        SSNTax = grossPay * .062;
+    }
+    totalTax = fedTax + stateTax + medTax + SSNTax;
+    netPay = grossPay - totalTax;
+    netPay = convert_to_string(netPay);
+    totalTax = convert_to_string(totalTax);
+    fedTax = convert_to_string(fedTax);
+    medTax = convert_to_string(medTax);
+    SSNTax = convert_to_string(SSNTax);
+    stateTax = convert_to_string(stateTax);
+    grossPay = convert_to_string(grossPay);
+    //convert all numbers to strings
     return [grossPay, fedTax, stateTax, medTax, SSNTax, totalTax, netPay];
+}
+//TODO: could unify 2020 and 2024 function with a switch?
+const federal_tax_2024 = (money) => {
+    let tax
+    if (money > FED_TAX_BRACKETS_2024[5]) {
+        remainder = money - 183647.25
+        tax = 183647.25 + (remainder * .37);
+    } else if (money > FED_TAX_BRACKETS_2024[4]) {
+        remainder = money - 55678.5; 
+        tax = 55678.5 + (remainder * .35);
+    } else if (money > FED_TAX_BRACKETS_2024[3]) {
+        remainder = money - 39110.5; 
+        tax = 39110.5 + (remainder * .32);
+    } else if (money > FED_TAX_BRACKETS_2024[2]) {
+        remainder = money - 17168.5 
+        tax = 17168.5 + (remainder * .24);
+    } else if (money > FED_TAX_BRACKETS_2024[1]) {
+        remainder = money - 5426; 
+        tax = 5426 + (remainder * .22);
+    } else if (money > FED_TAX_BRACKETS_2024[0]) {
+        remainder = money - 1160;
+        tax = 1160 + (remainder * .12);
+    } else {
+        tax = money * .1;
+    }
+    return tax;
+}
+
+const state_tax_2024 = (money) => {
+    let tax;
+    if (money > WI_TAX_BRACKETS_2024[2]) {
+        remainder = money - 14582.83;
+        tax = 14582.83 + (remainder * .0765);
+    } else if (money > WI_TAX_BRACKETS_2024[1]) {
+        remainder = money - 1045.04;
+        tax = 1045.04 + (remainder * .053);
+    } else {
+        remainder = money - 451.7;
+        tax = 451.7 + (remainder * .0354);
+    }
+    return tax;
+}
+
+const convert_to_string = (number) => {
+    number = number.toFixed(2);
+    number = number.toString();
+    number = "$" + number;
+    return number;
 }
 
 const get_table_size = (table) => {
