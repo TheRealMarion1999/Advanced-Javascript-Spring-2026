@@ -4,13 +4,6 @@
 //temporary thing so that I'm able to actually autofill variables for a node.
 const TABLE_VALUES = ["Gross Pay", "Federal Taxes", "State Taxes", "Medicare Taxes", "SSN Taxes", "Total Taxes", "Net Pay"];
 let table = document.getElementById("taxes-table");
-let grossPay = 0;
-let fedTax = 0;
-let stateTax = 0;
-let medTax = 0;
-let SSNTax = 0;
-let totalTax = 0;
-let netPay = 0;
 //kind of bad practice to make these an array, but I couldn't think of good, clear names for each bracket
 const FED_TAX_BRACKETS_2020 = [9876, 40126, 85526, 163301, 207351, 518401];
 const FED_TAX_BRACKETS_2024 = [11601, 47151, 100526, 191951, 243726, 609351];
@@ -86,6 +79,13 @@ const destroy_table_rows = (table) => {
 
 //TODO: Frankly this whole roundabout way of doing it is stupid. There has to be a better way.
 const tax_calcs_2020 = (money) => {
+    let grossPay = 0;
+    let fedTax = 0;
+    let stateTax = 0;
+    let medTax = 0;
+    let SSNTax = 0;
+    let totalTax = 0;
+    let netPay = 0;
     grossPay = Number(money);
     if (grossPay > FED_TAX_BRACKETS_2020[5]) {
         remainder = grossPay - 245178;
@@ -135,36 +135,24 @@ const tax_calcs_2020 = (money) => {
 }
 
 const tax_calcs_2024 = (money) => {
+    let totalTax = 0;
+    let netPay = 0;
     money = Number(money)
-    grossPay = money;
-    
-    fedTax = federal_tax_2024(money);
-    stateTax = state_tax_2024(money);
-    //Medicare
-    if (grossPay > MEDICARE_TAX_LIMIT_2024) {
-        remainder = grossPay - 29000;
-        medTax = 29000 + (remainder * .0235);
-    } else {
-        medTax = grossPay * .0145;
-    }
-
-    //Social Security
-    if (grossPay > SOCIAL_SECURITY_TAX_LIMIT_2024) {
-        SSNTax = 10453.2
-    } else {
-        SSNTax = grossPay * .062;
-    }
-    totalTax = fedTax + stateTax + medTax + SSNTax;
-    netPay = grossPay - totalTax;
+    totalTax = (federal_tax_2024(money) + 
+                state_tax_2024(money) + 
+                medicare_tax_2024(money) + 
+                social_security_tax_2024(money));
+    netPay = money - totalTax;
     netPay = convert_to_string(netPay);
     totalTax = convert_to_string(totalTax);
-    fedTax = convert_to_string(fedTax);
-    medTax = convert_to_string(medTax);
-    SSNTax = convert_to_string(SSNTax);
-    stateTax = convert_to_string(stateTax);
-    grossPay = convert_to_string(grossPay);
     //convert all numbers to strings
-    return [grossPay, fedTax, stateTax, medTax, SSNTax, totalTax, netPay];
+    return [convert_to_string(money),
+        convert_to_string(federal_tax_2024(money)), 
+        convert_to_string(state_tax_2024(money)),
+        convert_to_string(medicare_tax_2024(money)),
+        convert_to_string(social_security_tax_2024(money)),
+        totalTax,
+        netPay];
 }
 //TODO: could unify 2020 and 2024 function with a switch?
 const federal_tax_2024 = (money) => {
@@ -204,6 +192,27 @@ const state_tax_2024 = (money) => {
     } else {
         remainder = money - 451.7;
         tax = 451.7 + (remainder * .0354);
+    }
+    return tax;
+}
+
+const medicare_tax_2024 = (money) => {
+    let tax
+    if (money > MEDICARE_TAX_LIMIT_2024) {
+        remainder = money - 29000;
+        tax = 29000 + (remainder * .0235);
+    } else {
+        tax = money * .0145;
+    }
+    return tax;
+}
+
+const social_security_tax_2024 = (money) => {
+    let tax
+    if (money > SOCIAL_SECURITY_TAX_LIMIT_2024) {
+        tax = 10453.2
+    } else {
+        tax = money * .062;
     }
     return tax;
 }
