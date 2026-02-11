@@ -86,7 +86,7 @@ const tax_calcs_2020 = (money) => {
     let SSNTax = 0;
     let totalTax = 0;
     let netPay = 0;
-    grossPay = Number(money);
+    money = Number(money);
     if (grossPay > FED_TAX_BRACKETS_2020[5]) {
         remainder = grossPay - 245178;
         fedTax = 245178 + (remainder * .37);
@@ -130,8 +130,30 @@ const tax_calcs_2020 = (money) => {
     }
 
     totalTax = fedTax + stateTax + SSNTax + medTax;
-    netPay = grossPay - totalTax;
-    return [grossPay, fedTax, stateTax, medTax, SSNTax, totalTax, netPay];
+    netPay = money - totalTax;
+    return [convert_to_string(money),
+        fedTax, 
+        stateTax, 
+        medTax, 
+        SSNTax, 
+        totalTax, 
+        netPay];
+}
+
+const federal_tax_2020 = (money) => {
+
+}
+
+const state_tax_2020 = (money) => {
+
+}
+
+const medicare_tax_2020 = (money) => {
+
+}
+
+const social_security_tax_2020 = (money) => {
+
 }
 
 const tax_calcs_2024 = (money) => {
