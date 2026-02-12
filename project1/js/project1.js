@@ -3,7 +3,9 @@
 
 //temporary thing so that I'm able to actually autofill variables for a node.
 const TABLE_VALUES = ["Gross Pay", "Federal Taxes", "State Taxes", "Medicare Taxes", "SSN Taxes", "Total Taxes", "Net Pay"];
-let table = document.getElementById("taxes-table");
+
+//this is only here because otherwise I couldn't auto-fill commands.
+//let table = document.getElementById("taxes-table");
 //kind of bad practice to make these an array, but I couldn't think of good, clear names for each bracket
 const FED_TAX_BRACKETS_2020 = [9876, 40126, 85526, 163301, 207351, 518401];
 const FED_TAX_BRACKETS_2024 = [11601, 47151, 100526, 191951, 243726, 609351];
@@ -14,7 +16,8 @@ const MEDICARE_TAX_LIMIT_2020 = 200000;
 const SOCIAL_SECURITY_TAX_LIMIT_2024 = 168000;
 const MEDICARE_TAX_LIMIT_2024 = 200000;
 const init = () => {
-    table = document.getElementById("taxes-table");
+    //seemingly wasn't needed either; commented out just in case something actually did need it.
+    //let table = document.getElementById("taxes-table");
 
 
     //TODO: Unify the tax_calcs functions
@@ -34,9 +37,6 @@ const tax_calcs = event => {
         if (get_table_size(table) > 1) {
             destroy_table_rows(table);
         }
-        //check if TRs exist (or just... anything in table, really.)
-        //if they do, get rid of the current TRs and replace them with a new batch
-        //destroy_table_rows();
         //populate each TR with 2 TDs
         //this is a slightly more secure way of doing it, in the event we ever end up adding new buttons to the site
         if (event.currentTarget.getAttribute("data-model") == "taxes2020") {
@@ -79,106 +79,124 @@ const destroy_table_rows = (table) => {
 
 //TODO: Frankly this whole roundabout way of doing it is stupid. There has to be a better way.
 const tax_calcs_2020 = (money) => {
-    let grossPay = 0;
-    let fedTax = 0;
-    let stateTax = 0;
-    let medTax = 0;
-    let SSNTax = 0;
-    let totalTax = 0;
-    let netPay = 0;
     money = Number(money);
-    if (grossPay > FED_TAX_BRACKETS_2020[5]) {
-        remainder = grossPay - 245178;
-        fedTax = 245178 + (remainder * .37);
-    } else if (grossPay > FED_TAX_BRACKETS_2020[4]) {
-        remainder = grossPay - 130090;
-        fedTax = 130090 + (remainder * .35);
-    } else if (grossPay > FED_TAX_BRACKETS_2020[3]) {
-        remainder = grossPay - 63810;
-        fedTax = 63810 + (remainder * .32);
-    } else if (grossPay > FED_TAX_BRACKETS_2020[2]) {
-        remainder = grossPay - 24618;
-        fedTax = 24618 + (remainder * .24);
-    } else if (grossPay > FED_TAX_BRACKETS_2020[1]) {
-        remainder = grossPay - 5802.5
-        fedTax = 5802.5 + (remainder * .22);
-    } else if (grossPay > FED_TAX_BRACKETS_2020[0]) {
-        remainder = grossPay - 987.5;
-        fedTax = 987.5 + (remainder * .12);
-    } else {
-        fedTax = grossPay * .1;
-    }
-    if (grossPay > WI_TAX_BRACKETS_2020[2]) {
-        stateTax = 1;
-    } else if (grossPay > WI_TAX_BRACKETS_2020[1]) {
-        stateTax = 2;
-    } else if (grossPay > WI_TAX_BRACKETS_2020[0]) {
-        stateTax = 3;
-    } else {
-        stateTax = 4;
-    }
-    if (grossPay > SOCIAL_SECURITY_TAX_LIMIT_2020) {
-        SSNTax = 84940;
-    } else {
-        SSNTax = grossPay * .062;
-    }
-    if (grossPay > MEDICARE_TAX_LIMIT_2020) {
-        remainder = grossPay - 29000
-        medTax = 29000 + (remainder * .0235);
-    } else {
-        medTax = grossPay * .0145;
-    }
 
-    totalTax = fedTax + stateTax + SSNTax + medTax;
-    netPay = money - totalTax;
     return [convert_to_string(money),
-        fedTax, 
-        stateTax, 
-        medTax, 
-        SSNTax, 
-        totalTax, 
-        netPay];
+        convert_to_string(federal_tax_2020(money)), 
+        convert_to_string(state_tax_2020(money)),
+        convert_to_string(medicare_tax_2020(money)),
+        convert_to_string(social_security_tax_2020(money)),
+        convert_to_string(calculate_total_tax(
+                            federal_tax_2020(money), 
+                            state_tax_2020(money),
+                            medicare_tax_2020(money),
+                            social_security_tax_2020(money)
+                        )),
+        convert_to_string(
+                money - calculate_total_tax(
+                social_security_tax_2020(money), 
+                state_tax_2020(money), 
+                medicare_tax_2020(money), 
+                social_security_tax_2020(money))
+            )];
 }
 
 const federal_tax_2020 = (money) => {
-
+    let tax;
+    let remainder;
+    if (money > FED_TAX_BRACKETS_2020[5]) {
+        remainder = money - 245178;
+        tax = 245178 + (remainder * .37);
+    } else if (money > FED_TAX_BRACKETS_2020[4]) {
+        remainder = money - 130090;
+        tax = 130090 + (remainder * .35);
+    } else if (money > FED_TAX_BRACKETS_2020[3]) {
+        remainder = money - 63810;
+        tax = 63810 + (remainder * .32);
+    } else if (money > FED_TAX_BRACKETS_2020[2]) {
+        remainder = money - 24618;
+        tax = 24618 + (remainder * .24);
+    } else if (money > FED_TAX_BRACKETS_2020[1]) {
+        remainder = money - 5802.5
+        tax = 5802.5 + (remainder * .22);
+    } else if (money > FED_TAX_BRACKETS_2020[0]) {
+        remainder = money - 987.5;
+        tax = 987.5 + (remainder * .12);
+    } else {
+        tax = money * .1;
+    }
+    return tax;
 }
 
 const state_tax_2020 = (money) => {
-
+    let tax;
+    let remainder;
+    if (money > WI_TAX_BRACKETS_2020[2]) {
+        remainder = money - 15999.67;
+        tax = 15999.67 + (remainder * .0765);
+    } else if (money > WI_TAX_BRACKETS_2020[1]) {
+        remainder = money - 979.88;
+        tax = 979.88 + (remainder * .0627);
+    } else if (money > WI_TAX_BRACKETS_2020[0]) {
+        remainder = money - 423.74;
+        tax = 423.74 + (remainder * .0465);
+    } else {
+        tax = money * .0354;
+    }
+    return tax;
 }
 
 const medicare_tax_2020 = (money) => {
-
+    let tax;
+    let remainder;
+    if (money > MEDICARE_TAX_LIMIT_2020) {
+        remainder = money - 29000
+        tax = 29000 + (remainder * .0235);
+    } else {
+        tax = money * .0145;
+    }
+    return tax;
 }
 
 const social_security_tax_2020 = (money) => {
-
+    let tax;
+    if (money > SOCIAL_SECURITY_TAX_LIMIT_2020) {
+        tax = 84940;
+    } else {
+        tax = money * .062;
+    }
+    return tax;
 }
 
 const tax_calcs_2024 = (money) => {
-    let totalTax = 0;
-    let netPay = 0;
     money = Number(money)
-    totalTax = (federal_tax_2024(money) + 
-                state_tax_2024(money) + 
-                medicare_tax_2024(money) + 
-                social_security_tax_2024(money));
-    netPay = money - totalTax;
-    netPay = convert_to_string(netPay);
-    totalTax = convert_to_string(totalTax);
-    //convert all numbers to strings
+    //could declare the array here as a var maybe? and then run conversion as a for loop and return.
     return [convert_to_string(money),
         convert_to_string(federal_tax_2024(money)), 
         convert_to_string(state_tax_2024(money)),
         convert_to_string(medicare_tax_2024(money)),
         convert_to_string(social_security_tax_2024(money)),
-        totalTax,
-        netPay];
+        //honestly, these are a little hard to read, but I decided to try and get zero variables in the main function just to test myself
+        convert_to_string(calculate_total_tax(
+                            federal_tax_2024(money), 
+                            state_tax_2024(money),
+                            medicare_tax_2024(money),
+                            social_security_tax_2024(money)
+                        )),
+        convert_to_string(
+                money - calculate_total_tax(
+                social_security_tax_2024(money), 
+                state_tax_2024(money), 
+                medicare_tax_2024(money), 
+                social_security_tax_2024(money))
+            )];
 }
 //TODO: could unify 2020 and 2024 function with a switch?
+
+//why is the math wrong. This is the data given BY THE TABLE the math shouldn't be wrong
 const federal_tax_2024 = (money) => {
     let tax
+    let remainder;
     if (money > FED_TAX_BRACKETS_2024[5]) {
         remainder = money - 183647.25
         tax = 183647.25 + (remainder * .37);
@@ -189,13 +207,13 @@ const federal_tax_2024 = (money) => {
         remainder = money - 39110.5; 
         tax = 39110.5 + (remainder * .32);
     } else if (money > FED_TAX_BRACKETS_2024[2]) {
-        remainder = money - 17168.5 
+        remainder = money - 100525 
         tax = 17168.5 + (remainder * .24);
     } else if (money > FED_TAX_BRACKETS_2024[1]) {
-        remainder = money - 5426; 
+        remainder = money - 47150; 
         tax = 5426 + (remainder * .22);
     } else if (money > FED_TAX_BRACKETS_2024[0]) {
-        remainder = money - 1160;
+        remainder = money - 11160;
         tax = 1160 + (remainder * .12);
     } else {
         tax = money * .1;
@@ -205,21 +223,25 @@ const federal_tax_2024 = (money) => {
 
 const state_tax_2024 = (money) => {
     let tax;
+    let remainder;
     if (money > WI_TAX_BRACKETS_2024[2]) {
         remainder = money - 14582.83;
         tax = 14582.83 + (remainder * .0765);
     } else if (money > WI_TAX_BRACKETS_2024[1]) {
         remainder = money - 1045.04;
         tax = 1045.04 + (remainder * .053);
-    } else {
+    } else if (money > WI_TAX_BRACKETS_2024[0]) {
         remainder = money - 451.7;
-        tax = 451.7 + (remainder * .0354);
+        tax = 451.7 + (remainder * .0465);
+    } else {
+        tax = money * .0354
     }
     return tax;
 }
 
 const medicare_tax_2024 = (money) => {
     let tax
+    let remainder;
     if (money > MEDICARE_TAX_LIMIT_2024) {
         remainder = money - 29000;
         tax = 29000 + (remainder * .0235);
@@ -251,6 +273,10 @@ const get_table_size = (table) => {
     let table_size = table.childNodes;
 
     return table_size.length;
+}
+
+const calculate_total_tax = (federal, state, medicare, social) => {
+    return federal + state + medicare + social;
 }
 
 document.addEventListener("DOMContentLoaded", init);

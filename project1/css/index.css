@@ -24,3 +24,12 @@ td {
     border-style: solid;
     border-color: black;
 }
+
+body {
+    background-image: url("../img/pattern.png");
+}
+
+#form-holder-thing {
+    background-color: white;
+    padding-bottom: 5em;
+}
