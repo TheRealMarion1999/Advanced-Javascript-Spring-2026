@@ -1,5 +1,3 @@
-//I'm looking at the rubric. I don't see "Navigate the American Tax system" on the listed skills I'm meant to be assessed on.
-
 const TABLE_VALUES = ["Gross Pay", "Federal Taxes", "State Taxes", "Medicare Taxes", "SSN Taxes", "Total Taxes", "Net Pay"];
 
 //FEDERAL TAX
