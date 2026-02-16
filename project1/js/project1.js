@@ -9,11 +9,18 @@ const TABLE_VALUES = ["Gross Pay", "Federal Taxes", "State Taxes", "Medicare Tax
 //kind of bad practice to make these an array, but I couldn't think of good, clear names for each bracket
 const FED_TAX_BRACKETS_2020 = [9876, 40126, 85526, 163301, 207351, 518401];
 const FED_TAX_BRACKETS_2024 = [11601, 47151, 100526, 191951, 243726, 609351];
+const FED_TAX_REMAINDERS_2020 = [];
+const FED_TAX_REMAINDERS_2024 = [];
 const WI_TAX_BRACKETS_2020 = [11971, 23931, 263481];
 const WI_TAX_BRACKETS_2024 = [12761, 25521, 280951];
+const WI_TAX_REMAINDERS_2020 = [];
+const WI_TAX_REMAINDERS_2024 = [];
 const SOCIAL_SECURITY_TAX_LIMIT_2020 = 137000;
+const SOCIAL_SECURITY_MAX_PAY_2020 = 84940;
 const MEDICARE_TAX_LIMIT_2020 = 200000;
+const MEDICARE_REMAINDER = 29000;
 const SOCIAL_SECURITY_TAX_LIMIT_2024 = 168000;
+const SOCIAL_SECURITY_MAX_PAY_2024 = 10453.2;
 const MEDICARE_TAX_LIMIT_2024 = 200000;
 const init = () => {
     //seemingly wasn't needed either; commented out just in case something actually did need it.
@@ -75,9 +82,7 @@ const destroy_table_rows = (table) => {
 }
 
 //TODO: replace magic numbers
-//TODO: move all of these to individual functions
 
-//TODO: Frankly this whole roundabout way of doing it is stupid. There has to be a better way.
 const tax_calcs_2020 = (money) => {
     money = Number(money);
 
@@ -150,8 +155,8 @@ const medicare_tax_2020 = (money) => {
     let tax;
     let remainder;
     if (money > MEDICARE_TAX_LIMIT_2020) {
-        remainder = money - 29000
-        tax = 29000 + (remainder * .0235);
+        remainder = money - MEDICARE_REMAINDER
+        tax = MEDICARE_REMAINDER + (remainder * .0235);
     } else {
         tax = money * .0145;
     }
@@ -161,7 +166,7 @@ const medicare_tax_2020 = (money) => {
 const social_security_tax_2020 = (money) => {
     let tax;
     if (money > SOCIAL_SECURITY_TAX_LIMIT_2020) {
-        tax = 84940;
+        tax = SOCIAL_SECURITY_MAX_PAY_2020;
     } else {
         tax = money * .062;
     }
@@ -243,8 +248,8 @@ const medicare_tax_2024 = (money) => {
     let tax
     let remainder;
     if (money > MEDICARE_TAX_LIMIT_2024) {
-        remainder = money - 29000;
-        tax = 29000 + (remainder * .0235);
+        remainder = money - MEDICARE_REMAINDER;
+        tax = MEDICARE_REMAINDER + (remainder * .0235);
     } else {
         tax = money * .0145;
     }
@@ -254,7 +259,7 @@ const medicare_tax_2024 = (money) => {
 const social_security_tax_2024 = (money) => {
     let tax
     if (money > SOCIAL_SECURITY_TAX_LIMIT_2024) {
-        tax = 10453.2
+        tax = SOCIAL_SECURITY_MAX_PAY_2024;
     } else {
         tax = money * .062;
     }
@@ -269,7 +274,6 @@ const convert_to_string = (number) => {
 }
 
 const get_table_size = (table) => {
-    let table2 = document.getElementById("taxes-table");
     let table_size = table.childNodes;
 
     return table_size.length;
