@@ -47,11 +47,7 @@ const MEDICARE_TAX_LIMIT = 200000;
 const MEDICARE_REMAINDER = 29000;
 const MEDICARE_TAX_BRACKETS = [.0145, .0235];
 const init = () => {
-    //seemingly wasn't needed either; commented out just in case something actually did need it.
-    //let table = document.getElementById("taxes-table");
 
-
-    //TODO: Unify the tax_calcs functions
     let ButtonEventListener = document.getElementById("button2020");
     ButtonEventListener.addEventListener("click", tax_calcs);
     let ButtonEventListener2 = document.getElementById("button2024");
@@ -140,45 +136,6 @@ const federal_tax_2020 = (money) => {
             return tax;
         }
     }
-    /*
-    if (money > FED_TAX_BRACKETS_2020[5]) {
-        remainder = money - FED_TAX_REMAINDERS_2020[5];
-        for (i = 0; i < 6; i++) {
-            tax += FED_TAX_PREFILLED_2020[i];
-        }
-        tax += (remainder * FED_TAX_PERCENTAGES[6]);
-    } else if (money > FED_TAX_BRACKETS_2020[4]) {
-        remainder = money - FED_TAX_REMAINDERS_2020[4];
-        for (i = 0; i < 5; i++) {
-            tax += FED_TAX_PREFILLED_2020[i];
-        }
-        tax += (remainder * FED_TAX_PERCENTAGES[5]);
-    } else if (money > FED_TAX_BRACKETS_2020[3]) {
-        remainder = money - FED_TAX_REMAINDERS_2020[3];
-        for (i = 0; i < 4; i++) {
-            tax += FED_TAX_PREFILLED_2020[i];
-        }
-        tax += (remainder * FED_TAX_PERCENTAGES[4]);
-    } else if (money > FED_TAX_BRACKETS_2020[2]) {
-        remainder = money - FED_TAX_REMAINDERS_2020[2];
-        for (i = 0; i < 3; i++) {
-            tax += FED_TAX_PREFILLED_2020[i];
-        }
-        tax += (remainder * FED_TAX_PERCENTAGES[3]);
-    } else if (money > FED_TAX_BRACKETS_2020[1]) {
-        remainder = money - FED_TAX_REMAINDERS_2020[1];
-        for (i = 0; i < 2; i++) {
-            tax += FED_TAX_PREFILLED_2020[i];
-        }
-        tax += (remainder * FED_TAX_PERCENTAGES[2]);
-    } else if (money > FED_TAX_BRACKETS_2020[0]) {
-        remainder = money - FED_TAX_REMAINDERS_2020[0];
-        tax = FED_TAX_PREFILLED_2020[0] + (remainder * FED_TAX_PERCENTAGES[1]);
-    } else {
-        tax = money * FED_TAX_PERCENTAGES[0];
-    }
-    return tax;
-    */
 }
 
 const state_tax_2020 = (money) => {
@@ -198,27 +155,6 @@ const state_tax_2020 = (money) => {
             return tax;
         }
     }
-    /*
-    if (money > WI_TAX_BRACKETS_2020[2]) {
-        remainder = money - WI_TAX_REMAINDERS_2020[2];
-        for (i = 0; i < 3; i++) {
-            tax += WI_TAX_PREFILLED_2020[i];
-        }
-        tax += (remainder * WI_TAX_PERCENTAGES_2020[3]);
-    } else if (money > WI_TAX_BRACKETS_2020[1]) {
-        remainder = money - WI_TAX_REMAINDERS_2020[1];
-        for (i = 0; i < 2; i++) {
-            tax += WI_TAX_PREFILLED_2020[i];
-        }
-        tax += (remainder * WI_TAX_PERCENTAGES_2020[2]);
-    } else if (money > WI_TAX_BRACKETS_2020[0]) {
-        remainder = money - WI_TAX_REMAINDERS_2020[0];
-        tax = WI_TAX_PREFILLED_2020[0] + (remainder * WI_TAX_PERCENTAGES_2020[1]);
-    } else {
-        tax = money * WI_TAX_PERCENTAGES_2020[0];
-    }
-    return tax;
-    */
 }
 
 const medicare_tax = (money) => {
@@ -338,28 +274,6 @@ const state_tax_2024 = (money) => {
             return tax;
         }
     }
-    //keeping this around and inaccessible in case the loop doesn't work
-    /*
-    if (money > WI_TAX_BRACKETS_2024[2]) {
-        remainder = money - WI_TAX_REMAINDERS_2024[2];
-        for (i = 0; i < 3; i++) {
-            tax += WI_TAX_PREFILLED_2024[i];
-        }
-        tax += (remainder * WI_TAX_PERCENTAGES_2024[3]);
-    } else if (money > WI_TAX_BRACKETS_2024[1]) {
-        remainder = money - WI_TAX_REMAINDERS_2024[1];
-        for (i = 0; i < 2; i++) {
-            tax += WI_TAX_PREFILLED_2024[i];
-        }
-        tax += (remainder * WI_TAX_PERCENTAGES_2024[2]);
-    } else if (money > WI_TAX_BRACKETS_2024[0]) {
-        remainder = money - WI_TAX_REMAINDERS_2024[0];
-        tax = WI_TAX_PREFILLED_2024[0] + (remainder * WI_TAX_PERCENTAGES_2024[1]);
-    } else {
-        tax = money * WI_TAX_PERCENTAGES_2024[0];
-    }
-    return tax;
-    */
 }
 
 
