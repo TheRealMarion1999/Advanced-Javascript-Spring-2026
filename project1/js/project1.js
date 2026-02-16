@@ -4,23 +4,33 @@
 //temporary thing so that I'm able to actually autofill variables for a node.
 const TABLE_VALUES = ["Gross Pay", "Federal Taxes", "State Taxes", "Medicare Taxes", "SSN Taxes", "Total Taxes", "Net Pay"];
 
-//this is only here because otherwise I couldn't auto-fill commands.
-//let table = document.getElementById("taxes-table");
-//kind of bad practice to make these an array, but I couldn't think of good, clear names for each bracket
 const FED_TAX_BRACKETS_2020 = [9876, 40126, 85526, 163301, 207351, 518401];
 const FED_TAX_BRACKETS_2024 = [11601, 47151, 100526, 191951, 243726, 609351];
-const FED_TAX_REMAINDERS_2020 = [];
-const FED_TAX_REMAINDERS_2024 = [];
+const FED_TAX_PERCENTAGES = [.1, .12, .22, .24, .32, .35, .37];
+const FED_TAX_REMAINDERS_2020 = [987.5, 5802.5, 24618, 63810, 130090, 245178];
+const FED_TAX_PREFILLED_2020 = [987.5, 5802.5, 24618, 63810, 130090, 245178];
+const FED_TAX_REMAINDERS_2024 = [11160, 47150, 100525, 39110.5, 55678.5, 183647.25];
+const FED_TAX_PREFILLED_2024 = [1160, 5426, 17168.5, 39110.5, 55678.5, 183647.25];
+
 const WI_TAX_BRACKETS_2020 = [11971, 23931, 263481];
 const WI_TAX_BRACKETS_2024 = [12761, 25521, 280951];
-const WI_TAX_REMAINDERS_2020 = [];
-const WI_TAX_REMAINDERS_2024 = [];
+const WI_TAX_PERCENTAGES_2020 = [.0354, .0465, .0627, .0765];
+const WI_TAX_PERCENTAGES_2024 = [WI_TAX_PERCENTAGES_2020[0], WI_TAX_PERCENTAGES_2020[1], .053, WI_TAX_PERCENTAGES_2020[2]];
+const WI_TAX_REMAINDERS_2020 = [423.74, 979.88, 15999.67];
+const WI_TAX_PREFILLED_2020 = [423.74, 979.88, 15999.67];
+const WI_TAX_REMAINDERS_2024 = [451.7, 1045.04, 14582.83];
+const WI_TAX_PREFILLED_2024 = [451.7, 1045.04, 14582.83];
+
+//v- future proofing lol
+const SOCIAL_SECURITY_TAX_BRACKET = [.062];
 const SOCIAL_SECURITY_TAX_LIMIT_2020 = 137000;
 const SOCIAL_SECURITY_MAX_PAY_2020 = 84940;
-const MEDICARE_TAX_LIMIT_2020 = 200000;
-const MEDICARE_REMAINDER = 29000;
 const SOCIAL_SECURITY_TAX_LIMIT_2024 = 168000;
 const SOCIAL_SECURITY_MAX_PAY_2024 = 10453.2;
+
+const MEDICARE_TAX_LIMIT_2020 = 200000;
+const MEDICARE_REMAINDER = 29000;
+const MEDICARE_TAX_BRACKETS = [.0145, .0235];
 const MEDICARE_TAX_LIMIT_2024 = 200000;
 const init = () => {
     //seemingly wasn't needed either; commented out just in case something actually did need it.
@@ -110,25 +120,25 @@ const federal_tax_2020 = (money) => {
     let tax;
     let remainder;
     if (money > FED_TAX_BRACKETS_2020[5]) {
-        remainder = money - 245178;
-        tax = 245178 + (remainder * .37);
+        remainder = money - FED_TAX_REMAINDERS_2020[5];
+        tax = FED_TAX_PREFILLED_2020[5] + (remainder * FED_TAX_PERCENTAGES[6]);
     } else if (money > FED_TAX_BRACKETS_2020[4]) {
-        remainder = money - 130090;
-        tax = 130090 + (remainder * .35);
+        remainder = money - FED_TAX_REMAINDERS_2020[4];
+        tax = FED_TAX_PREFILLED_2020[4] + (remainder * FED_TAX_PERCENTAGES[5]);
     } else if (money > FED_TAX_BRACKETS_2020[3]) {
-        remainder = money - 63810;
-        tax = 63810 + (remainder * .32);
+        remainder = money - FED_TAX_REMAINDERS_2020[3];
+        tax = FED_TAX_PREFILLED_2020[3] + (remainder * FED_TAX_PERCENTAGES[4]);
     } else if (money > FED_TAX_BRACKETS_2020[2]) {
-        remainder = money - 24618;
-        tax = 24618 + (remainder * .24);
+        remainder = money - FED_TAX_REMAINDERS_2020[2];
+        tax = FED_TAX_PREFILLED_2020[2] + (remainder * FED_TAX_PERCENTAGES[3]);
     } else if (money > FED_TAX_BRACKETS_2020[1]) {
-        remainder = money - 5802.5
-        tax = 5802.5 + (remainder * .22);
+        remainder = money - FED_TAX_REMAINDERS_2020[1];
+        tax = FED_TAX_PREFILLED_2020[1] + (remainder * FED_TAX_PERCENTAGES[2]);
     } else if (money > FED_TAX_BRACKETS_2020[0]) {
-        remainder = money - 987.5;
-        tax = 987.5 + (remainder * .12);
+        remainder = money - FED_TAX_REMAINDERS_2020[0];
+        tax = FED_TAX_PREFILLED_2020[0] + (remainder * FED_TAX_PERCENTAGES[1]);
     } else {
-        tax = money * .1;
+        tax = money * FED_TAX_PERCENTAGES_2020[0];
     }
     return tax;
 }
@@ -137,16 +147,19 @@ const state_tax_2020 = (money) => {
     let tax;
     let remainder;
     if (money > WI_TAX_BRACKETS_2020[2]) {
-        remainder = money - 15999.67;
-        tax = 15999.67 + (remainder * .0765);
+        remainder = money - WI_TAX_REMAINDERS_2020[2];
+        tax = WI_TAX_PREFILLED_2020[2] + (remainder * WI_TAX_PERCENTAGES_2020[3]);
     } else if (money > WI_TAX_BRACKETS_2020[1]) {
-        remainder = money - 979.88;
-        tax = 979.88 + (remainder * .0627);
+        remainder = money - WI_TAX_REMAINDERS_2020[1];
+        tax = WI_TAX_PREFILLED_2020[1] + (remainder * WI_TAX_PERCENTAGES_2020[2]);
     } else if (money > WI_TAX_BRACKETS_2020[0]) {
-        remainder = money - 423.74;
-        tax = 423.74 + (remainder * .0465);
+        remainder = money - WI_TAX_REMAINDERS_2020[0];
+        tax = WI_TAX_PREFILLED_2020[0] + (remainder * WI_TAX_PERCENTAGES_2020[1]);
     } else {
-        tax = money * .0354;
+        tax = money * WI_TAX_PERCENTAGES_2020[0];
+    }
+    if (isNaN(tax)) {
+        console.log(money);
     }
     return tax;
 }
@@ -156,9 +169,9 @@ const medicare_tax_2020 = (money) => {
     let remainder;
     if (money > MEDICARE_TAX_LIMIT_2020) {
         remainder = money - MEDICARE_REMAINDER
-        tax = MEDICARE_REMAINDER + (remainder * .0235);
+        tax = MEDICARE_REMAINDER + (remainder * MEDICARE_TAX_BRACKETS[1]);
     } else {
-        tax = money * .0145;
+        tax = money * MEDICARE_TAX_BRACKETS[0];
     }
     return tax;
 }
@@ -168,7 +181,7 @@ const social_security_tax_2020 = (money) => {
     if (money > SOCIAL_SECURITY_TAX_LIMIT_2020) {
         tax = SOCIAL_SECURITY_MAX_PAY_2020;
     } else {
-        tax = money * .062;
+        tax = money * SOCIAL_SECURITY_TAX_BRACKET[0];
     }
     return tax;
 }
@@ -198,30 +211,29 @@ const tax_calcs_2024 = (money) => {
 }
 //TODO: could unify 2020 and 2024 function with a switch?
 
-//why is the math wrong. This is the data given BY THE TABLE the math shouldn't be wrong
 const federal_tax_2024 = (money) => {
     let tax
     let remainder;
     if (money > FED_TAX_BRACKETS_2024[5]) {
-        remainder = money - 183647.25
-        tax = 183647.25 + (remainder * .37);
+        remainder = money - FED_TAX_REMAINDERS_2024[5];
+        tax = FED_TAX_PREFILLED_2024[5] + (remainder * FED_TAX_PERCENTAGES[6]);
     } else if (money > FED_TAX_BRACKETS_2024[4]) {
-        remainder = money - 55678.5; 
-        tax = 55678.5 + (remainder * .35);
+        remainder = money - FED_TAX_REMAINDERS_2024[4]; 
+        tax = FED_TAX_PREFILLED_2024[4] + (remainder * FED_TAX_PERCENTAGES[5]);
     } else if (money > FED_TAX_BRACKETS_2024[3]) {
-        remainder = money - 39110.5; 
-        tax = 39110.5 + (remainder * .32);
+        remainder = money - FED_TAX_REMAINDERS_2024[3]; 
+        tax = FED_TAX_PREFILLED_2024[3] + (remainder * FED_TAX_PERCENTAGES[4]);
     } else if (money > FED_TAX_BRACKETS_2024[2]) {
-        remainder = money - 100525 
-        tax = 17168.5 + (remainder * .24);
+        remainder = money - FED_TAX_REMAINDERS_2024[2]; 
+        tax = FED_TAX_PREFILLED_2024[2] + (remainder * FED_TAX_PERCENTAGES[3]);
     } else if (money > FED_TAX_BRACKETS_2024[1]) {
-        remainder = money - 47150; 
-        tax = 5426 + (remainder * .22);
+        remainder = money - FED_TAX_REMAINDERS_2024[1]; 
+        tax = FED_TAX_PREFILLED_2024[1] + (remainder * FED_TAX_PERCENTAGES[2]);
     } else if (money > FED_TAX_BRACKETS_2024[0]) {
-        remainder = money - 11160;
-        tax = 1160 + (remainder * .12);
+        remainder = money - FED_TAX_REMAINDERS_2024[0];
+        tax = FED_TAX_PREFILLED_2024[0] + (remainder * FED_TAX_PERCENTAGES[1]);
     } else {
-        tax = money * .1;
+        tax = money * FED_TAX_PERCENTAGES[0];
     }
     return tax;
 }
@@ -230,16 +242,16 @@ const state_tax_2024 = (money) => {
     let tax;
     let remainder;
     if (money > WI_TAX_BRACKETS_2024[2]) {
-        remainder = money - 14582.83;
-        tax = 14582.83 + (remainder * .0765);
+        remainder = money - WI_TAX_REMAINDERS_2024[2];
+        tax = WI_TAX_PREFILLED_2024[2] + (remainder * WI_TAX_PERCENTAGES_2024[3]);
     } else if (money > WI_TAX_BRACKETS_2024[1]) {
-        remainder = money - 1045.04;
-        tax = 1045.04 + (remainder * .053);
+        remainder = money - WI_TAX_REMAINDERS_2024[1];
+        tax = WI_TAX_PREFILLED_2024[1] + (remainder * WI_TAX_PERCENTAGES_2024[2]);
     } else if (money > WI_TAX_BRACKETS_2024[0]) {
-        remainder = money - 451.7;
-        tax = 451.7 + (remainder * .0465);
+        remainder = money - WI_TAX_REMAINDERS_2024[0];
+        tax = WI_TAX_PREFILLED_2024[0] + (remainder * WI_TAX_PERCENTAGES_2024[1]);
     } else {
-        tax = money * .0354
+        tax = money * WI_TAX_PERCENTAGES_2024[0];
     }
     return tax;
 }
@@ -249,9 +261,9 @@ const medicare_tax_2024 = (money) => {
     let remainder;
     if (money > MEDICARE_TAX_LIMIT_2024) {
         remainder = money - MEDICARE_REMAINDER;
-        tax = MEDICARE_REMAINDER + (remainder * .0235);
+        tax = MEDICARE_REMAINDER + (remainder * MEDICARE_TAX_BRACKETS[1]);
     } else {
-        tax = money * .0145;
+        tax = money * MEDICARE_TAX_BRACKETS[0];
     }
     return tax;
 }
@@ -261,7 +273,7 @@ const social_security_tax_2024 = (money) => {
     if (money > SOCIAL_SECURITY_TAX_LIMIT_2024) {
         tax = SOCIAL_SECURITY_MAX_PAY_2024;
     } else {
-        tax = money * .062;
+        tax = money * SOCIAL_SECURITY_TAX_BRACKET[0];
     }
     return tax;
 }
