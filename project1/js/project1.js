@@ -40,7 +40,7 @@ const WI_TAX_PREFILLED_2024 = [WI_TAX_REMAINDERS_2024[0] * WI_TAX_PERCENTAGES_20
 //SOCIAL SECURITY
 const SOCIAL_SECURITY_TAX_BRACKET = .062;
 const SOCIAL_SECURITY_TAX_LIMIT_2020 = 137000;
-const SOCIAL_SECURITY_MAX_PAY_2020 = 84940;
+const SOCIAL_SECURITY_MAX_PAY_2020 = 8494;
 const SOCIAL_SECURITY_TAX_LIMIT_2024 = 168000;
 const SOCIAL_SECURITY_MAX_PAY_2024 = 10453.2;
 
@@ -110,24 +110,39 @@ const destroy_table_rows = (table) => {
 
 const tax_calcs_2020 = (money) => {
     money = Number(money);
+    const FEDERAL = federal_tax_2020(money);
+    const STATE = state_tax_2020(money);
+    const MEDICARE = medicare_tax(money);
+    const SOCIAL = social_security_tax_2020(money);
+    const TOTAL = calculate_total_tax(FEDERAL, STATE, MEDICARE, SOCIAL);
+    const NET = calculate_net_pay(money, TOTAL);
     return [convert_to_string(money),
-        convert_to_string(federal_tax_2020(money)), 
-        convert_to_string(state_tax_2020(money)),
-        convert_to_string(medicare_tax(money)),
-        convert_to_string(social_security_tax_2020(money)),
-        convert_to_string(calculate_total_tax(
-                            federal_tax_2020(money), 
-                            state_tax_2020(money),
-                            medicare_tax(money),
-                            social_security_tax_2020(money)
-                        )),
-        convert_to_string(calculate_net_pay_2020(money))];
+        convert_to_string(FEDERAL), 
+        convert_to_string(STATE),
+        convert_to_string(MEDICARE),
+        convert_to_string(SOCIAL),
+        convert_to_string(TOTAL),
+        convert_to_string(NET)];
 }
 
 const federal_tax_2020 = (money) => {
     let tax;
     tax = 0;
     let remainder;
+    for (i = FED_TAX_PERCENTAGES.length - 1; i > -1; i--) {
+        if (money > FED_TAX_BRACKETS_2020[i - 1]) {
+            remainder = money - FED_TAX_REMAINDERS_2020[i - 1];
+            for (j = 0; j < i; j++) {
+                tax += FED_TAX_PREFILLED_2020[j];
+            }
+            tax += remainder * FED_TAX_PERCENTAGES[i];
+            return tax;
+        } else if (money < FED_TAX_BRACKETS_2020[0]) {
+            tax = money * FED_TAX_PERCENTAGES[0];
+            return tax;
+        }
+    }
+    /*
     if (money > FED_TAX_BRACKETS_2020[5]) {
         remainder = money - FED_TAX_REMAINDERS_2020[5];
         for (i = 0; i < 6; i++) {
@@ -165,12 +180,27 @@ const federal_tax_2020 = (money) => {
         tax = money * FED_TAX_PERCENTAGES[0];
     }
     return tax;
+    */
 }
 
 const state_tax_2020 = (money) => {
     let tax;
     tax = 0;
     let remainder;
+    for (i = WI_TAX_BRACKETS_2020.length - 1; i > -1; i--) {
+        if (money > WI_TAX_BRACKETS_2020[i - 1]) {
+            remainder = money - WI_TAX_REMAINDERS_2020[i - 1];
+            for (j = 0; j < i; j++) {
+                tax += WI_TAX_PREFILLED_2020[j];
+            }
+            tax += remainder * WI_TAX_PERCENTAGES_2020[i];
+            return tax;
+        } else if (money < WI_TAX_BRACKETS_2020[0]) {
+            tax = money * WI_TAX_PERCENTAGES_2020[0];
+            return tax;
+        }
+    }
+    /*
     if (money > WI_TAX_BRACKETS_2020[2]) {
         remainder = money - WI_TAX_REMAINDERS_2020[2];
         for (i = 0; i < 3; i++) {
@@ -190,6 +220,7 @@ const state_tax_2020 = (money) => {
         tax = money * WI_TAX_PERCENTAGES_2020[0];
     }
     return tax;
+    */
 }
 
 const medicare_tax = (money) => {
@@ -216,28 +247,42 @@ const social_security_tax_2020 = (money) => {
 
 const tax_calcs_2024 = (money) => {
     money = Number(money)
-    //could declare the array here as a var maybe? and then run conversion as a for loop and return.
+    const FEDERAL = federal_tax_2024(money);
+    const STATE = state_tax_2024(money);
+    const MEDICARE = medicare_tax(money);
+    const SOCIAL = social_security_tax_2024(money);
+    const TOTAL = calculate_total_tax(FEDERAL, STATE, MEDICARE, SOCIAL);
+    const NET = calculate_net_pay(money, TOTAL);
     return [convert_to_string(money),
-        convert_to_string(federal_tax_2024(money)), 
-        convert_to_string(state_tax_2024(money)),
-        convert_to_string(medicare_tax(money)),
-        convert_to_string(social_security_tax_2024(money)),
-        //honestly, these are a little hard to read, but I decided to try and get zero variables in the main function just to test myself
-        convert_to_string(calculate_total_tax(
-                            federal_tax_2024(money), 
-                            state_tax_2024(money),
-                            medicare_tax(money),
-                            social_security_tax_2024(money)
-                        )),
-        convert_to_string(
-                calculate_net_pay_2024(money)
-            )];
+        convert_to_string(FEDERAL), 
+        convert_to_string(STATE),
+        convert_to_string(MEDICARE),
+        convert_to_string(SOCIAL),
+        convert_to_string(TOTAL),
+        convert_to_string(NET)];
 }
 
 const federal_tax_2024 = (money) => {
     let tax;
     tax = 0;
     let remainder;
+    for (i = FED_TAX_PERCENTAGES.length - 1; i > -1; i--) {
+        if (money > FED_TAX_BRACKETS_2024[i - 1]) {
+            remainder = money - FED_TAX_REMAINDERS_2024[i - 1];
+            for (j = 0; j < i; j++) {
+                tax += FED_TAX_PREFILLED_2024[j];
+            }
+            tax += remainder * FED_TAX_PERCENTAGES[i];
+            return tax;
+        } else if (money < FED_TAX_BRACKETS_2024[0]) {
+            tax = money * FED_TAX_PERCENTAGES[0];
+            return tax;
+        }
+    }
+    console.log("we had to go past here");
+    remainder = 0;
+    tax = 0;
+    /*
     if (money > FED_TAX_BRACKETS_2024[5]) {
         remainder = money - FED_TAX_REMAINDERS_2024[5];
         for (i = 0; i < 6; i++) {
@@ -254,7 +299,7 @@ const federal_tax_2024 = (money) => {
         remainder = money - FED_TAX_REMAINDERS_2024[3]; 
         for (i = 0; i < 4; i++) {
             tax += FED_TAX_PREFILLED_2024[i];
-        }
+       }
         tax += (remainder * FED_TAX_PERCENTAGES[4]);
     } else if (money > FED_TAX_BRACKETS_2024[2]) {
         remainder = money - FED_TAX_REMAINDERS_2024[2];
@@ -267,7 +312,7 @@ const federal_tax_2024 = (money) => {
         for (i = 0; i < 2; i++) {
             tax += FED_TAX_PREFILLED_2024[i];
         }
-        tax += (remainder * FED_TAX_PERCENTAGES[2]);
+       tax += (remainder * FED_TAX_PERCENTAGES[2]);
     } else if (money > FED_TAX_BRACKETS_2024[0]) {
         remainder = money - FED_TAX_REMAINDERS_2024[0];
         tax = FED_TAX_PREFILLED_2024[0] + (remainder * FED_TAX_PERCENTAGES[1]);
@@ -275,12 +320,28 @@ const federal_tax_2024 = (money) => {
         tax = money * FED_TAX_PERCENTAGES[0];
     }
     return tax;
+    */
 }
 
 const state_tax_2024 = (money) => {
     let tax;
     tax = 0;
     let remainder;
+    for (i = WI_TAX_BRACKETS_2024.length - 1; i > -1; i--) {
+        if (money > WI_TAX_BRACKETS_2024[i - 1]) {
+            remainder = money - WI_TAX_REMAINDERS_2024[i - 1];
+            for (j = 0; j < i; j++) {
+                tax += WI_TAX_PREFILLED_2024[j];
+            }
+            tax += remainder * WI_TAX_PERCENTAGES_2024[i];
+            return tax;
+        } else if (money < WI_TAX_BRACKETS_2024[0]) {
+            tax = money * WI_TAX_PERCENTAGES_2024[0];
+            return tax;
+        }
+    }
+    //keeping this around and inaccessible in case the loop doesn't work
+    /*
     if (money > WI_TAX_BRACKETS_2024[2]) {
         remainder = money - WI_TAX_REMAINDERS_2024[2];
         for (i = 0; i < 3; i++) {
@@ -300,6 +361,7 @@ const state_tax_2024 = (money) => {
         tax = money * WI_TAX_PERCENTAGES_2024[0];
     }
     return tax;
+    */
 }
 
 
@@ -330,17 +392,13 @@ const calculate_total_tax = (federal, state, medicare, social) => {
     return federal + state + medicare + social;
 }
 
-const calculate_net_pay_2024 = (money) => {
-    return money - calculate_total_tax(
-                social_security_tax_2024(money), 
-                state_tax_2024(money), 
-                medicare_tax(money), 
-                social_security_tax_2024(money))
+const calculate_net_pay = (money, total) => {
+    return money - total;
 }
 
 const calculate_net_pay_2020 = (money) => {
     return money - calculate_total_tax(
-                social_security_tax_2020(money), 
+                federal_tax_2020(money), 
                 state_tax_2020(money), 
                 medicare_tax(money), 
                 social_security_tax_2020(money))
