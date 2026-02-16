@@ -29,9 +29,13 @@ const WI_TAX_BRACKETS_2024 = [12761, 25521, 280951];
 const WI_TAX_PERCENTAGES_2020 = [.0354, .0465, .0627, .0765];
 const WI_TAX_PERCENTAGES_2024 = [WI_TAX_PERCENTAGES_2020[0], WI_TAX_PERCENTAGES_2020[1], .053, WI_TAX_PERCENTAGES_2020[2]];
 const WI_TAX_REMAINDERS_2020 = [11970, 23930, 263480];
-const WI_TAX_PREFILLED_2020 = [423.74, 979.88, 15999.67];
+const WI_TAX_PREFILLED_2020 = [WI_TAX_REMAINDERS_2020[0] * WI_TAX_PERCENTAGES_2020[0],
+                                (WI_TAX_REMAINDERS_2020[1] - WI_TAX_REMAINDERS_2020[0]) * WI_TAX_PERCENTAGES_2020[1],
+                                (WI_TAX_REMAINDERS_2020[2] - WI_TAX_REMAINDERS_2020[1]) * WI_TAX_PERCENTAGES_2020[2]];
 const WI_TAX_REMAINDERS_2024 = [12760, 25520, 280951];
-const WI_TAX_PREFILLED_2024 = [451.7, 1045.04, 14582.83];
+const WI_TAX_PREFILLED_2024 = [WI_TAX_REMAINDERS_2024[0] * WI_TAX_PERCENTAGES_2024[0],
+                                (WI_TAX_REMAINDERS_2024[1] - WI_TAX_REMAINDERS_2024[0]) * WI_TAX_PERCENTAGES_2024[1],
+                                (WI_TAX_REMAINDERS_2024[2] - WI_TAX_REMAINDERS_2024[1]) * WI_TAX_PERCENTAGES_2024[2]];
 
 //SOCIAL SECURITY
 const SOCIAL_SECURITY_TAX_BRACKET = .062;
@@ -106,7 +110,6 @@ const destroy_table_rows = (table) => {
 
 const tax_calcs_2020 = (money) => {
     money = Number(money);
-    console.log((FED_TAX_REMAINDERS_2020[2] * FED_TAX_PERCENTAGES[2]) + FED_TAX_PREFILLED_2020[1]);
     return [convert_to_string(money),
         convert_to_string(federal_tax_2020(money)), 
         convert_to_string(state_tax_2020(money)),
@@ -118,33 +121,43 @@ const tax_calcs_2020 = (money) => {
                             medicare_tax(money),
                             social_security_tax_2020(money)
                         )),
-        convert_to_string(
-                money - calculate_total_tax(
-                federal_tax_2020(money), 
-                state_tax_2020(money), 
-                medicare_tax(money), 
-                social_security_tax_2020(money))
-            )];
+        convert_to_string(calculate_net_pay_2020(money))];
 }
 
 const federal_tax_2020 = (money) => {
     let tax;
+    tax = 0;
     let remainder;
     if (money > FED_TAX_BRACKETS_2020[5]) {
         remainder = money - FED_TAX_REMAINDERS_2020[5];
-        tax = FED_TAX_PREFILLED_2020[5] + (remainder * FED_TAX_PERCENTAGES[6]);
+        for (i = 0; i < 6; i++) {
+            tax += FED_TAX_PREFILLED_2020[i];
+        }
+        tax += (remainder * FED_TAX_PERCENTAGES[6]);
     } else if (money > FED_TAX_BRACKETS_2020[4]) {
         remainder = money - FED_TAX_REMAINDERS_2020[4];
-        tax = FED_TAX_PREFILLED_2020[4] + (remainder * FED_TAX_PERCENTAGES[5]);
+        for (i = 0; i < 5; i++) {
+            tax += FED_TAX_PREFILLED_2020[i];
+        }
+        tax += (remainder * FED_TAX_PERCENTAGES[5]);
     } else if (money > FED_TAX_BRACKETS_2020[3]) {
         remainder = money - FED_TAX_REMAINDERS_2020[3];
-        tax = FED_TAX_PREFILLED_2020[3] + (remainder * FED_TAX_PERCENTAGES[4]);
+        for (i = 0; i < 4; i++) {
+            tax += FED_TAX_PREFILLED_2020[i];
+        }
+        tax += (remainder * FED_TAX_PERCENTAGES[4]);
     } else if (money > FED_TAX_BRACKETS_2020[2]) {
         remainder = money - FED_TAX_REMAINDERS_2020[2];
-        tax = FED_TAX_PREFILLED_2020[2] + (remainder * FED_TAX_PERCENTAGES[3]);
+        for (i = 0; i < 3; i++) {
+            tax += FED_TAX_PREFILLED_2020[i];
+        }
+        tax += (remainder * FED_TAX_PERCENTAGES[3]);
     } else if (money > FED_TAX_BRACKETS_2020[1]) {
         remainder = money - FED_TAX_REMAINDERS_2020[1];
-        tax = FED_TAX_PREFILLED_2020[1] + (remainder * FED_TAX_PERCENTAGES[2]);
+        for (i = 0; i < 2; i++) {
+            tax += FED_TAX_PREFILLED_2020[i];
+        }
+        tax += (remainder * FED_TAX_PERCENTAGES[2]);
     } else if (money > FED_TAX_BRACKETS_2020[0]) {
         remainder = money - FED_TAX_REMAINDERS_2020[0];
         tax = FED_TAX_PREFILLED_2020[0] + (remainder * FED_TAX_PERCENTAGES[1]);
@@ -156,13 +169,20 @@ const federal_tax_2020 = (money) => {
 
 const state_tax_2020 = (money) => {
     let tax;
+    tax = 0;
     let remainder;
     if (money > WI_TAX_BRACKETS_2020[2]) {
         remainder = money - WI_TAX_REMAINDERS_2020[2];
-        tax = WI_TAX_PREFILLED_2020[2] + (remainder * WI_TAX_PERCENTAGES_2020[3]);
+        for (i = 0; i < 3; i++) {
+            tax += WI_TAX_PREFILLED_2020[i];
+        }
+        tax += (remainder * WI_TAX_PERCENTAGES_2020[3]);
     } else if (money > WI_TAX_BRACKETS_2020[1]) {
         remainder = money - WI_TAX_REMAINDERS_2020[1];
-        tax = WI_TAX_PREFILLED_2020[1] + (remainder * WI_TAX_PERCENTAGES_2020[2]);
+        for (i = 0; i < 2; i++) {
+            tax += WI_TAX_PREFILLED_2020[i];
+        }
+        tax += (remainder * WI_TAX_PERCENTAGES_2020[2]);
     } else if (money > WI_TAX_BRACKETS_2020[0]) {
         remainder = money - WI_TAX_REMAINDERS_2020[0];
         tax = WI_TAX_PREFILLED_2020[0] + (remainder * WI_TAX_PERCENTAGES_2020[1]);
@@ -210,32 +230,44 @@ const tax_calcs_2024 = (money) => {
                             social_security_tax_2024(money)
                         )),
         convert_to_string(
-                money - calculate_total_tax(
-                social_security_tax_2024(money), 
-                state_tax_2024(money), 
-                medicare_tax(money), 
-                social_security_tax_2024(money))
+                calculate_net_pay_2024(money)
             )];
 }
 
 const federal_tax_2024 = (money) => {
-    let tax
+    let tax;
+    tax = 0;
     let remainder;
     if (money > FED_TAX_BRACKETS_2024[5]) {
         remainder = money - FED_TAX_REMAINDERS_2024[5];
-        tax = FED_TAX_PREFILLED_2024[5] + (remainder * FED_TAX_PERCENTAGES[6]);
+        for (i = 0; i < 6; i++) {
+            tax += FED_TAX_PREFILLED_2024[i];
+        }
+        tax += (remainder * FED_TAX_PERCENTAGES[6]);
     } else if (money > FED_TAX_BRACKETS_2024[4]) {
         remainder = money - FED_TAX_REMAINDERS_2024[4]; 
-        tax = FED_TAX_PREFILLED_2024[4] + (remainder * FED_TAX_PERCENTAGES[5]);
+        for (i = 0; i < 5; i++) {
+            tax += FED_TAX_PREFILLED_2024[i];
+        }
+        tax += (remainder * FED_TAX_PERCENTAGES[5]);
     } else if (money > FED_TAX_BRACKETS_2024[3]) {
         remainder = money - FED_TAX_REMAINDERS_2024[3]; 
-        tax = FED_TAX_PREFILLED_2024[3] + (remainder * FED_TAX_PERCENTAGES[4]);
+        for (i = 0; i < 4; i++) {
+            tax += FED_TAX_PREFILLED_2024[i];
+        }
+        tax += (remainder * FED_TAX_PERCENTAGES[4]);
     } else if (money > FED_TAX_BRACKETS_2024[2]) {
-        remainder = money - FED_TAX_REMAINDERS_2024[2]; 
-        tax = FED_TAX_PREFILLED_2024[2] + (remainder * FED_TAX_PERCENTAGES[3]);
+        remainder = money - FED_TAX_REMAINDERS_2024[2];
+        for (i = 0; i < 3; i++) {
+            tax += FED_TAX_PREFILLED_2024[i];
+        }
+        tax += (remainder * FED_TAX_PERCENTAGES[3]);
     } else if (money > FED_TAX_BRACKETS_2024[1]) {
         remainder = money - FED_TAX_REMAINDERS_2024[1]; 
-        tax = FED_TAX_PREFILLED_2024[1] + (remainder * FED_TAX_PERCENTAGES[2]);
+        for (i = 0; i < 2; i++) {
+            tax += FED_TAX_PREFILLED_2024[i];
+        }
+        tax += (remainder * FED_TAX_PERCENTAGES[2]);
     } else if (money > FED_TAX_BRACKETS_2024[0]) {
         remainder = money - FED_TAX_REMAINDERS_2024[0];
         tax = FED_TAX_PREFILLED_2024[0] + (remainder * FED_TAX_PERCENTAGES[1]);
@@ -247,13 +279,20 @@ const federal_tax_2024 = (money) => {
 
 const state_tax_2024 = (money) => {
     let tax;
+    tax = 0;
     let remainder;
     if (money > WI_TAX_BRACKETS_2024[2]) {
         remainder = money - WI_TAX_REMAINDERS_2024[2];
-        tax = WI_TAX_PREFILLED_2024[2] + (remainder * WI_TAX_PERCENTAGES_2024[3]);
+        for (i = 0; i < 3; i++) {
+            tax += WI_TAX_PREFILLED_2024[i];
+        }
+        tax += (remainder * WI_TAX_PERCENTAGES_2024[3]);
     } else if (money > WI_TAX_BRACKETS_2024[1]) {
         remainder = money - WI_TAX_REMAINDERS_2024[1];
-        tax = WI_TAX_PREFILLED_2024[1] + (remainder * WI_TAX_PERCENTAGES_2024[2]);
+        for (i = 0; i < 2; i++) {
+            tax += WI_TAX_PREFILLED_2024[i];
+        }
+        tax += (remainder * WI_TAX_PERCENTAGES_2024[2]);
     } else if (money > WI_TAX_BRACKETS_2024[0]) {
         remainder = money - WI_TAX_REMAINDERS_2024[0];
         tax = WI_TAX_PREFILLED_2024[0] + (remainder * WI_TAX_PERCENTAGES_2024[1]);
@@ -289,6 +328,22 @@ const get_table_size = (table) => {
 
 const calculate_total_tax = (federal, state, medicare, social) => {
     return federal + state + medicare + social;
+}
+
+const calculate_net_pay_2024 = (money) => {
+    return money - calculate_total_tax(
+                social_security_tax_2024(money), 
+                state_tax_2024(money), 
+                medicare_tax(money), 
+                social_security_tax_2024(money))
+}
+
+const calculate_net_pay_2020 = (money) => {
+    return money - calculate_total_tax(
+                social_security_tax_2020(money), 
+                state_tax_2020(money), 
+                medicare_tax(money), 
+                social_security_tax_2020(money))
 }
 
 document.addEventListener("DOMContentLoaded", init);
