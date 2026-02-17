@@ -280,12 +280,4 @@ const calculate_net_pay = (money, total) => {
     return money - total;
 }
 
-const calculate_net_pay_2020 = (money) => {
-    return money - calculate_total_tax(
-                federal_tax_2020(money), 
-                state_tax_2020(money), 
-                medicare_tax(money), 
-                social_security_tax_2020(money))
-}
-
 document.addEventListener("DOMContentLoaded", init);
