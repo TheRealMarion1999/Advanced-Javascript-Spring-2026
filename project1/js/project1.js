@@ -60,12 +60,12 @@ const init = () => {
    //uhhh I mean I guess this works?? I guess these can be constant too????
    //flaw with this setup: I need both buttons in order for it to work for... Some Reason...
     const BUTTON_EVENT_LISTENER = document.getElementById("button2020");
-    BUTTON_EVENT_LISTENER.addEventListener("click", tax_calcs);
+    BUTTON_EVENT_LISTENER.addEventListener("click", main);
     const BUTTON_EVENT_LISTENER_2 = document.getElementById("button2024");
-    BUTTON_EVENT_LISTENER_2.addEventListener("click", tax_calcs);
+    BUTTON_EVENT_LISTENER_2.addEventListener("click", main);
 }
 
-const tax_calcs = event => {
+const main = event => {
     const TABLE = document.getElementById("taxes-table");
     let values = [];
     const USER_INPUT = document.getElementById("input");
