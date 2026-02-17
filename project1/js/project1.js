@@ -1,6 +1,9 @@
 const TABLE_VALUES = ["Gross Pay", "Federal Taxes", "State Taxes", "Medicare Taxes", "SSN Taxes", "Total Taxes", "Net Pay"];
 
 //FEDERAL TAX
+
+//could merge Brackets and Remainders? Possibly... They're both just one off...
+//that, and the name is kind of deceptive on Remainders...
 const FED_TAX_BRACKETS_2020 = [9876, 40126, 85526, 163301, 207351, 518401];
 const FED_TAX_BRACKETS_2024 = [11601, 47151, 100526, 191951, 243726, 609351];
 const FED_TAX_PERCENTAGES = [.1, .12, .22, .24, .32, .35, .37];
@@ -48,48 +51,56 @@ const MEDICARE_REMAINDER = 29000;
 const MEDICARE_TAX_BRACKETS = [.0145, .0235];
 const init = () => {
 
+    /*
     let ButtonEventListener = document.getElementById("button2020");
     ButtonEventListener.addEventListener("click", tax_calcs);
     let ButtonEventListener2 = document.getElementById("button2024");
     ButtonEventListener2.addEventListener("click", tax_calcs);
+    */
+   //uhhh I mean I guess this works?? I guess these can be constant too????
+   //flaw with this setup: I need both buttons in order for it to work for... Some Reason...
+    const BUTTON_EVENT_LISTENER = document.getElementById("button2020");
+    BUTTON_EVENT_LISTENER.addEventListener("click", tax_calcs);
+    const BUTTON_EVENT_LISTENER_2 = document.getElementById("button2024");
+    BUTTON_EVENT_LISTENER_2.addEventListener("click", tax_calcs);
 }
 
 const tax_calcs = event => {
-    let table = document.getElementById("taxes-table");
+    const TABLE = document.getElementById("taxes-table");
     let values = [];
-    let userInput = document.getElementById("input");
-    let userInputValue = userInput.value;
-    if (userInputValue !== "") {
+    const USER_INPUT = document.getElementById("input");
+    const USER_INPUT_VALUE = USER_INPUT.value;
+    if (USER_INPUT_VALUE !== "") {
 
-        if (get_table_size(table) > 1) {
-            destroy_table_rows(table);
+        if (get_table_size(TABLE) > 1) {
+            destroy_table_rows(TABLE);
         }
         switch(event.currentTarget.getAttribute("data-model")) {
             case "taxes2020":
-                values = tax_calcs_2020(userInputValue);
+                values = tax_calcs_2020(USER_INPUT_VALUE);
                 break;
             case "taxes2024":
-                values = tax_calcs_2024(userInputValue);
+                values = tax_calcs_2024(USER_INPUT_VALUE);
                 break;
         }
         for (i in TABLE_VALUES) {
-            create_table_row(table, TABLE_VALUES[i], values[i]);
+            create_table_row(TABLE, TABLE_VALUES[i], values[i]);
         }
     }
 }
 
 //creates a table row with a value from the TABLE_VALUES array
 const create_table_row = (table, leftCellContent = "term", rightCellContent = "value") => {
-    let table_row = document.createElement("tr");
-    table_row.className = "infoRow";
+    const TABLE_ROW = document.createElement("tr");
+    TABLE_ROW.className = "infoRow";
     //(TODO: prolly could do this better)
-    let table_data_L = document.createElement("td");
-    let table_data_R = document.createElement("td");
-    table_data_L.textContent = leftCellContent;
-    table_data_R.textContent = rightCellContent;
-    table_row.appendChild(table_data_L);
-    table_row.appendChild(table_data_R);
-    table.appendChild(table_row);
+    const TABLE_DATA_L = document.createElement("td");
+    const TABLE_DATA_R = document.createElement("td");
+    TABLE_DATA_L.textContent = leftCellContent;
+    TABLE_DATA_R.textContent = rightCellContent;
+    TABLE_ROW.appendChild(TABLE_DATA_L);
+    TABLE_ROW.appendChild(TABLE_DATA_R);
+    table.appendChild(TABLE_ROW);
 }
 
 //destroys all rows in the current array
@@ -216,45 +227,6 @@ const federal_tax_2024 = (money) => {
     console.log("we had to go past here");
     remainder = 0;
     tax = 0;
-    /*
-    if (money > FED_TAX_BRACKETS_2024[5]) {
-        remainder = money - FED_TAX_REMAINDERS_2024[5];
-        for (i = 0; i < 6; i++) {
-            tax += FED_TAX_PREFILLED_2024[i];
-        }
-        tax += (remainder * FED_TAX_PERCENTAGES[6]);
-    } else if (money > FED_TAX_BRACKETS_2024[4]) {
-        remainder = money - FED_TAX_REMAINDERS_2024[4]; 
-        for (i = 0; i < 5; i++) {
-            tax += FED_TAX_PREFILLED_2024[i];
-        }
-        tax += (remainder * FED_TAX_PERCENTAGES[5]);
-    } else if (money > FED_TAX_BRACKETS_2024[3]) {
-        remainder = money - FED_TAX_REMAINDERS_2024[3]; 
-        for (i = 0; i < 4; i++) {
-            tax += FED_TAX_PREFILLED_2024[i];
-       }
-        tax += (remainder * FED_TAX_PERCENTAGES[4]);
-    } else if (money > FED_TAX_BRACKETS_2024[2]) {
-        remainder = money - FED_TAX_REMAINDERS_2024[2];
-        for (i = 0; i < 3; i++) {
-            tax += FED_TAX_PREFILLED_2024[i];
-        }
-        tax += (remainder * FED_TAX_PERCENTAGES[3]);
-    } else if (money > FED_TAX_BRACKETS_2024[1]) {
-        remainder = money - FED_TAX_REMAINDERS_2024[1]; 
-        for (i = 0; i < 2; i++) {
-            tax += FED_TAX_PREFILLED_2024[i];
-        }
-       tax += (remainder * FED_TAX_PERCENTAGES[2]);
-    } else if (money > FED_TAX_BRACKETS_2024[0]) {
-        remainder = money - FED_TAX_REMAINDERS_2024[0];
-        tax = FED_TAX_PREFILLED_2024[0] + (remainder * FED_TAX_PERCENTAGES[1]);
-    } else {
-        tax = money * FED_TAX_PERCENTAGES[0];
-    }
-    return tax;
-    */
 }
 
 const state_tax_2024 = (money) => {
@@ -295,9 +267,9 @@ const convert_to_string = (number) => {
 }
 
 const get_table_size = (table) => {
-    let table_size = table.childNodes;
+    const TABLE_SIZE = table.childNodes;
 
-    return table_size.length;
+    return TABLE_SIZE.length;
 }
 
 const calculate_total_tax = (federal, state, medicare, social) => {
