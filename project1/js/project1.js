@@ -224,9 +224,47 @@ const federal_tax_2024 = (money) => {
             return tax;
         }
     }
-    console.log("we had to go past here");
-    remainder = 0;
-    tax = 0;
+    /*
+    emergency backup code
+    if (money > FED_TAX_BRACKETS_2024[5]) {
+        remainder = money - FED_TAX_REMAINDERS_2024[5];
+        for (i = 0; i < 6; i++) {
+            tax += FED_TAX_PREFILLED_2024[i];
+        }
+        tax += (remainder * FED_TAX_PERCENTAGES[6]);
+    } else if (money > FED_TAX_BRACKETS_2024[4]) {
+        remainder = money - FED_TAX_REMAINDERS_2024[4]; 
+        for (i = 0; i < 5; i++) {
+            tax += FED_TAX_PREFILLED_2024[i];
+        }
+        tax += (remainder * FED_TAX_PERCENTAGES[5]);
+    } else if (money > FED_TAX_BRACKETS_2024[3]) {
+        remainder = money - FED_TAX_REMAINDERS_2024[3]; 
+        for (i = 0; i < 4; i++) {
+            tax += FED_TAX_PREFILLED_2024[i];
+       }
+        tax += (remainder * FED_TAX_PERCENTAGES[4]);
+    } else if (money > FED_TAX_BRACKETS_2024[2]) {
+        remainder = money - FED_TAX_REMAINDERS_2024[2];
+        for (i = 0; i < 3; i++) {
+            tax += FED_TAX_PREFILLED_2024[i];
+        }
+        tax += (remainder * FED_TAX_PERCENTAGES[3]);
+    } else if (money > FED_TAX_BRACKETS_2024[1]) {
+        remainder = money - FED_TAX_REMAINDERS_2024[1]; 
+        for (i = 0; i < 2; i++) {
+            tax += FED_TAX_PREFILLED_2024[i];
+        }
+       tax += (remainder * FED_TAX_PERCENTAGES[2]);
+    } else if (money > FED_TAX_BRACKETS_2024[0]) {
+        remainder = money - FED_TAX_REMAINDERS_2024[0];
+        tax = FED_TAX_PREFILLED_2024[0] + (remainder * FED_TAX_PERCENTAGES[1]);
+    } else {
+        tax = money * FED_TAX_PERCENTAGES[0];
+    }
+    return tax;
+    */
+
 }
 
 const state_tax_2024 = (money) => {
