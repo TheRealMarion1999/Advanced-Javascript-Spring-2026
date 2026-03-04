@@ -10,12 +10,15 @@ const init = () => {
 const getLocation = () => {
     const URL = "http://api.geonames.org/postalCodeSearchJSON";
 
-    const ENTERED_POSTAL_CODE = document.getElementById("getWeather");
+    const ENTERED_POSTAL_CODE = document.getElementById("zipCode");
     const POSTALCODE = ENTERED_POSTAL_CODE.value;
+    console.log(ZIPCODE);
 
-    const PARAMS = `?username=${USERNAME}&postalcode=${ZIPCODE}&postalcode=${ZIPCODE}&country=${COUNTRY}`;
+    const PARAMS = `?username=${USERNAME}&postalcode=${ZIPCODE}&country=${COUNTRY}`;
 
     const XHR = new XMLHttpRequest();
+
+    console.log(URL + PARAMS);
 
     XHR.open("get", URL + PARAMS);
 
