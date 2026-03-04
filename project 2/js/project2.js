@@ -38,7 +38,7 @@ const getLocation = () => {
         }
     }
     XHR.onerror = () => {
-        console.log("network error");
+        console.log("network error while processing location");
     }
     XHR.send(null);
 }
@@ -60,7 +60,7 @@ const getWeather = (lat, lng) => {
         }
     }
     XHR.onerror = () => {
-        console.log("network error");
+        console.log("network error while processing weather data");
     }
     XHR.send(null);
 
