@@ -139,7 +139,7 @@ const windStuff = (windSpeed, windDirection) => {
     } else if (windDirection >= WIND_DIRECTION_S) {
         WIND_DIRECTION_TABLE.textContent = WIND_DIRECTION_S_SYMBOL;
     } else if (WIND_DIRECTION_SE.includes(windDirection)) {
-        WIND_DIRECTION_TABLE.textContent = WIND_DIRECTION_W_SYMBOL;
+        WIND_DIRECTION_TABLE.textContent = WIND_DIRECTION_SE_SYMBOL;
     } else if (windDirection >= WIND_DIRECTION_E) {
         WIND_DIRECTION_TABLE.textContent = WIND_DIRECTION_E_SYMBOL;
     } else if (WIND_DIRECTION_NE.includes(windDirection)) {
