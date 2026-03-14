@@ -8,11 +8,16 @@ const init = () => {
     WEATHER_BUTTON.addEventListener("click", getLocation);
 }
 
-const getLocation = () => {
-    const URL = "http://api.geonames.org/postalCodeSearchJSON";
+const input_is_good = (postalCode) => {
+    if (postalCode.length == 5) {
+        return true;
+    }
+    return false;
+}
 
+const getLocation = () => {
     const MESSAGE = document.getElementById("loadingMessage");
-    MESSAGE.textContent = "Girls are conducting meteorology, please wait warmly...";
+    const URL = "http://api.geonames.org/postalCodeSearchJSON";
 
     const ENTERED_POSTAL_CODE = document.getElementById("zipCode");
     const POSTALCODE = ENTERED_POSTAL_CODE.value;
@@ -21,26 +26,31 @@ const getLocation = () => {
 
     const XHR = new XMLHttpRequest();
 
-    XHR.open("get", URL + PARAMS, true);
+    if (input_is_good()) {
+        MESSAGE.textContent = "Girls are conducting meteorology, please wait warmly...";
 
-    XHR.onload = () => {
-        
-        if (XHR.readyState === 4) {
-            const DATA = JSON.parse(XHR.responseText);
-            const LAT = DATA.postalCodes[0].lat;
-            const LNG = DATA.postalCodes[0].lng;
-            const PLACE = DATA.postalCodes[0].placeName;
-            const STATE = DATA.postalCodes[0].adminName1;
-            const COUNTY = DATA.postalCodes[0].adminName2;
-            //this is probably not a good way to do it. nesting XHRs just feels wrong, y'know?
-            getWeather(LAT, LNG);
+        XHR.open("get", URL + PARAMS, true);
+
+        XHR.onload = () => {
+            
+            if (XHR.readyState === 4) {
+                const DATA = JSON.parse(XHR.responseText);
+                const LAT = DATA.postalCodes[0].lat;
+                const LNG = DATA.postalCodes[0].lng;
+                //unused data. maybe I'll add more later.
+                const PLACE = DATA.postalCodes[0].placeName;
+                const STATE = DATA.postalCodes[0].adminName1;
+                const COUNTY = DATA.postalCodes[0].adminName2;
+                //this is probably not a good way to do it. nesting XHRs just feels wrong, y'know?
+                getWeather(LAT, LNG);
+            }
         }
+        XHR.onerror = () => {
+            MESSAGE.textContent = "network error while processing location";
+            console.log("network error while processing location");
+        }
+        XHR.send(null);
     }
-    XHR.onerror = () => {
-        MESSAGE.textContent = "network error while processing location";
-        console.log("network error while processing location");
-    }
-    XHR.send(null);
 }
 
 const getWeather = (lat, lng) => {

@@ -7,18 +7,23 @@
         <script src="js/project2.js"></script>
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+        <link rel="stylesheet" href="css/index.css">
     </head>
     <body>
         <header>
+            <div class="container" id="top-thing">
+                <h2>Check your weather or something</h2>
+            </div>
         </header>
         <main>
-            <body>
+            
+            <div class="container" id="form-holder-thing">
                 <form action="">
-                    <label for="zipCode"></label>
-                    <input type="number" id="zipCode" name="zipCode">
+                    <label for="zipCode">Zip Code</label>
+                    <input type="number" id="zipCode" maxlength="5" minlength="5" required name="zipCode">
                     <button id="getWeather" type="button">Get Weather</button>
                 </form>
-                <h2 id="loadingMessage"></h2>
+                <p id="loadingMessage"></p>
                 <table id="infoTable">
                     <tr>
                         <td>Wind Speed</td>
@@ -33,7 +38,7 @@
                         <td id="temperature"></td>
                     </tr>
                 </table>
-            </body>
+            </div>
         </main>
         <footer>
         </footer>
