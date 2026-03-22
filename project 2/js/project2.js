@@ -26,7 +26,7 @@ const getLocation = () => {
 
     const XHR = new XMLHttpRequest();
 
-    if (input_is_good()) {
+    if (input_is_good(POSTALCODE)) {
         MESSAGE.textContent = "Girls are conducting meteorology, please wait warmly...";
 
         XHR.open("get", URL + PARAMS, true);
@@ -65,10 +65,12 @@ const getWeather = (lat, lng) => {
     XHR.onload = () => {
         if (XHR.readyState === 4) {
             const DATA = JSON.parse(XHR.responseText);
+            console.log(DATA);
             const WIND_DIRECTON = DATA.weatherObservation.windDirection;
             const WIND_SPEED = DATA.weatherObservation.windSpeed;
             const TEMPERATURE = convert_to_burger_measurements(DATA.weatherObservation.temperature).toFixed(2);
-            create_weather_information(TEMPERATURE, WIND_SPEED, WIND_DIRECTON);
+            const CITY = DATA.weatherObservation.stationName;
+            create_weather_information(TEMPERATURE, WIND_SPEED, WIND_DIRECTON, CITY);
         }
     }
     XHR.onerror = () => {
@@ -87,9 +89,10 @@ const convert_to_burger_measurements = (celsius) => {
     return FARENHEIT;
 }
 
-const create_weather_information = (farenheit, windSpeed, windDirection) => {
+const create_weather_information = (farenheit, windSpeed, windDirection, city) => {
     temperatureStuff(farenheit);
     windStuff(windSpeed, windDirection);
+    cityStuff(city);
 }
 
 const temperatureStuff = (farenheit) => {
@@ -102,9 +105,9 @@ const temperatureStuff = (farenheit) => {
     if (farenheit >= HOT) {
         TEMPERATURE_TABLE.textContent = TEMPERATURE_HOT_SYMBOL;
     } else if (farenheit <= COLD) {
-        TEMPERATURE_TABLE.textContent = TEMPERATURE_COLD_SYMBOL;
+        TEMPERATURE_TABLE.textContent = farenheit + "(" + TEMPERATURE_COLD_SYMBOL + ")";
     } else {
-        TEMPERATURE_TABLE.textContent = TEMPERATURE_NEUTRAL_SYMBOL;
+        TEMPERATURE_TABLE.textContent = farenheit + "(" + TEMPERATURE_NEUTRAL_SYMBOL + ")";
     }
 }
 
@@ -157,6 +160,13 @@ const windStuff = (windSpeed, windDirection) => {
     } else {
         WIND_DIRECTION_TABLE.textContent = WIND_DIRECTION_N_SYMBOL;
     }
+}
+
+const cityStuff = (city) => {
+    city = city.toLowerCase();
+    city = city.charAt(0).toUpperCase() + city.slice(1);
+    const CITY_TABLE = document.getElementById("city");
+    CITY_TABLE.textContent = city;
 }
 
 //Shamlessly stolen from Stackoverflow, I didn't feel like typing out a 41 integer array for problem-solving with wind directions.
