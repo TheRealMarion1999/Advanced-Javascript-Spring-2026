@@ -27,8 +27,10 @@ const getLocation = () => {
     const XHR = new XMLHttpRequest();
 
     if (input_is_good(POSTALCODE)) {
+        const IMAGE = document.createElement("img");
+        IMAGE.src = "img/ajax-loader.gif";
         MESSAGE.textContent = "Girls are conducting meteorology, please wait warmly...";
-
+        MESSAGE.appendChild(IMAGE);
         XHR.open("get", URL + PARAMS, true);
 
         XHR.onload = () => {
