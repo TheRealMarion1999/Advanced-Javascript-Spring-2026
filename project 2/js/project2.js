@@ -39,12 +39,12 @@ const getLocation = () => {
                 const DATA = JSON.parse(XHR.responseText);
                 const LAT = DATA.postalCodes[0].lat;
                 const LNG = DATA.postalCodes[0].lng;
-                //unused data. maybe I'll add more later.
                 const PLACE = DATA.postalCodes[0].placeName;
+                //unused data. maybe I'll add more later.
                 const STATE = DATA.postalCodes[0].adminName1;
                 const COUNTY = DATA.postalCodes[0].adminName2;
                 //this is probably not a good way to do it. nesting XHRs just feels wrong, y'know?
-                getWeather(LAT, LNG);
+                getWeather(LAT, LNG, PLACE);
             }
         }
         XHR.onerror = () => {
@@ -55,7 +55,7 @@ const getLocation = () => {
     }
 }
 
-const getWeather = (lat, lng) => {
+const getWeather = (lat, lng, place) => {
     const URL = "http://api.geonames.org/findNearByWeatherJSON";
     const PARAMS = `?lat=${lat}&lng=${lng}&username=${USERNAME}`;
 
@@ -67,12 +67,10 @@ const getWeather = (lat, lng) => {
     XHR.onload = () => {
         if (XHR.readyState === 4) {
             const DATA = JSON.parse(XHR.responseText);
-            console.log(DATA);
             const WIND_DIRECTON = DATA.weatherObservation.windDirection;
             const WIND_SPEED = DATA.weatherObservation.windSpeed;
             const TEMPERATURE = convert_to_burger_measurements(DATA.weatherObservation.temperature).toFixed(2);
-            const CITY = DATA.weatherObservation.stationName;
-            create_weather_information(TEMPERATURE, WIND_SPEED, WIND_DIRECTON, CITY);
+            create_weather_information(TEMPERATURE, WIND_SPEED, WIND_DIRECTON, place);
         }
     }
     XHR.onerror = () => {
@@ -165,8 +163,6 @@ const windStuff = (windSpeed, windDirection) => {
 }
 
 const cityStuff = (city) => {
-    city = city.toLowerCase();
-    city = city.charAt(0).toUpperCase() + city.slice(1);
     const CITY_TABLE = document.getElementById("city");
     CITY_TABLE.textContent = city;
 }
