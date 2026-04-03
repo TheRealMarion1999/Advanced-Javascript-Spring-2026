@@ -5,6 +5,7 @@ const init = () => {
     TEXT_CONTENTS = UNORDERED_LISTS.map(textGetter);
     const FULL_LIST = [...TEXT_CONTENTS, ...MORE_NODES];
     console.log(FULL_LIST);
+
 }
 
 const textGetter = (node) => {
