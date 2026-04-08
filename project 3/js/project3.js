@@ -9,7 +9,7 @@ const init = () => {
 
     BUTTON.addEventListener("click", () => 
     {
-        LOAD_MESSAGE.textContent = "yes";
+        create_table_point();
     });
 }
 
@@ -18,7 +18,9 @@ when creating the table elements, we want to have a unified structure like this:
 <td><a>(trashcan ascii image)</a>(task name)</td>
 */
 
-const create_table_point = (table) => {
+const create_table_point = () => {
+    const TABLE = document.getElementById("output");
+    const TABLE_ROW = document.createElement("tr")
     const TABLE_POINT = document.createElement("td");
     const TRASH_CAN_ICON = String.fromCodePoint(0x1F5D1);
     const DELETE_ICON = document.createElement("a");
@@ -26,7 +28,13 @@ const create_table_point = (table) => {
     DELETE_ICON.href = "";
     TABLE_POINT.appendChild(DELETE_ICON);
     TABLE_POINT.append("TEXT");
-    table.appendChild(TABLE_POINT);
+    TABLE_ROW.appendChild(TABLE_POINT)
+    TABLE.appendChild(TABLE_ROW);
 }
+
+/**
+ * parse the json data from the api and output each entry to the table using create_table_point()
+ * FOREACH MY GOAAAAT!!!
+ */
 
 window.addEventListener("load", init);
