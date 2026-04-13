@@ -1,6 +1,11 @@
 const URL = "https://ghu8xhzgfe.execute-api.us-east-1.amazonaws.com/tasks/";
 const MY_ID = "2934096";
 
+const HTTP = require("http");
+let server = HTTP.createServer((req, res) => {
+    res.write("Hello!!! Hi!!!");
+})
+
 const init = () => {
     const TEXTINPUT = document.getElementById("toDoInput");
     const BUTTON = document.getElementById("toDoButton");
