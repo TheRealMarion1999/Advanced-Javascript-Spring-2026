@@ -11,36 +11,45 @@ const init = () => {
     BUTTON.addEventListener("click", () => 
     {
         //call a POST statement, after it's done call a GET again..
-        get_todo_list();
+        create_new_json_point();
     });
 }
 
 const get_todo_list = () => {
     //for each of the entries in the json, create a table point
-    create_table_point();
+    create_table_point(document.getElementById("output"));
 }
 
-const create_new_json_point = async () => {
-    const XHR = new XMLHttpRequest
-    const PARAMS = {
-    'StudentId' : '2934096',
-    'Description' : 'Record Test'
-    }
-    const NEW_TASK_RESPONSE = await fetch()
-}
-
-const create_table_point = () => {
+const create_new_json_point = async (description = "test") => {
+    const XHR = new XMLHttpRequest();
     const TABLE = document.getElementById("output");
-    const TABLE_ROW = document.createElement("tr")
-    const TEXT = document.createTextNode("TEXT")
+    const PARAMS = {
+    'StudentId' : MY_ID,
+    'Description' : description
+    }
+    const NEW_TASK_RESPONSE = await fetch(URL, {
+        method: "POST",
+        headers: {
+            "x-api-key" : api-key,
+            "Content-Type" : "application/json"
+        },
+        body: JSON.stringify(PARAMS)
+    });
+    create_table_point(TABLE, description);
+    const DATA = await NEW_TASK_RESPONSE.JSON();
+}
+
+const create_table_point = (table, description = "test") => {
+    const TABLE_ROW = document.createElement("tr");
+    const TEXT = document.createTextNode(description);
     const TABLE_POINT = document.createElement("td");
     const TRASH_CAN_ICON = String.fromCodePoint(0x1F5D1);
     const DELETE_ICON = document.createElement("button");
     DELETE_ICON.textContent = TRASH_CAN_ICON;
     TABLE_POINT.appendChild(DELETE_ICON);
     TABLE_POINT.appendChild(TEXT);
-    TABLE_ROW.appendChild(TABLE_POINT)
-    TABLE.appendChild(TABLE_ROW);
+    TABLE_ROW.appendChild(TABLE_POINT);
+    table.appendChild(TABLE_ROW);
 
     DELETE_ICON.addEventListener("click", () => {
         //This will call a DELETE statement to the API, then call a GET again
