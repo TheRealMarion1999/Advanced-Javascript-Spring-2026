@@ -1,5 +1,6 @@
 const URL = "https://ghu8xhzgfe.execute-api.us-east-1.amazonaws.com/tasks/";
 const MY_ID = "2934096";
+const API_KEY = "Itcheui2tB58SlUGe8rrP8mskudGsNDT9nfKKG9S"
 
 
 const init = () => {
@@ -30,7 +31,7 @@ const create_new_json_point = async (description = "test") => {
     const NEW_TASK_RESPONSE = await fetch(URL, {
         method: "POST",
         headers: {
-            "x-api-key" : api-key,
+            "x-api-key" : API_KEY,
             "Content-Type" : "application/json"
         },
         body: JSON.stringify(PARAMS)
